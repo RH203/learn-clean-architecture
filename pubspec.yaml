@@ -1,0 +1,89 @@
+name: learn_clean_archi
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  equatable:
+  # Logging
+  logger:
+  dio:
+  json_annotation:
+
+  # State managment
+  bloc:
+  flutter_bloc:
+
+  # Router
+  go_router:
+
+  # Dependecy Inject
+  get_it:
+  injectable:
+
+  cached_network_image:
+  envied:
+
+  shared_preferences:
+
+  lottie:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  flutter_lints: ^5.0.0
+  build_runner:
+
+  injectable_generator:
+  json_serializable:
+  envied_generator:
+
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/lottie/
+
+  
+  
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
