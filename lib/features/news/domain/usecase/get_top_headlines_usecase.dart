@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:learn_clean_archi/features/news/domain/entity/article.dart';
-import 'package:learn_clean_archi/features/news/domain/repositories/news_repository.dart';
+import 'package:learn_clean_archi/features/news/domain/repositories/news_repositories.dart';
 
 @LazySingleton()
 class GetTopHeadlinesUseCase {
@@ -8,7 +8,7 @@ class GetTopHeadlinesUseCase {
 
   const GetTopHeadlinesUseCase(this.newsRepository);
 
-  Future<List<Article>> call() async {
-    return await newsRepository.getTopHeadlines();
+  Future<List<Article>> call(String? countryCode) async {
+    return await newsRepository.getTopHeadlines(countryCode);
   }
 }
