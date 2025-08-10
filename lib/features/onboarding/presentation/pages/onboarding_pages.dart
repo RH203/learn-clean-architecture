@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_clean_archi/app_logger.dart';
 import 'package:learn_clean_archi/core/constants/app_constant.dart';
 import 'package:learn_clean_archi/core/constants/assets.dart';
 import 'package:learn_clean_archi/features/onboarding/presentation/widgets/onboarding_widget.dart';
-import 'package:lottie/lottie.dart';
 
 class OnboardingPages extends StatefulWidget {
   const OnboardingPages({super.key});
@@ -33,7 +31,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
         curve: Curves.easeInOut,
       );
     } else {
-      context.go('/list-news');
+      context.go('/news');
     }
   }
 
