@@ -1,17 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:learn_clean_archi/features/news/data/model/source_model.dart';
 import 'package:learn_clean_archi/features/news/domain/entity/article.dart';
 
 part 'article_model.g.dart';
 
 @JsonSerializable()
 class ArticleModel {
-  final String? sourceId;
-  final String? soureName, author, title, description, url, urlToImage, content;
+  final String? author, title, description, url, urlToImage, content;
   final DateTime? publishedAt;
 
+  @JsonKey(name: 'source')
+  final SourceModel? source;
+
   const ArticleModel({
-    required this.sourceId,
-    required this.soureName,
+    required this.source,
     required this.author,
     required this.title,
     required this.description,
@@ -30,8 +32,8 @@ class ArticleModel {
 
   Article toEntity() {
     return Article(
-      sourceId: sourceId,
-      soureName: soureName,
+      sourceId: source?.sourceId,
+      soureName: source?.sourceName,
       author: author,
       title: title,
       description: description,
