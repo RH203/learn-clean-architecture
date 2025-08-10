@@ -1,18 +1,20 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:learn_clean_archi/app_logger.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_clean_archi/features/news/domain/entity/article.dart';
-import 'package:learn_clean_archi/features/news/presentations/bloc/news_bloc.dart';
+import 'package:learn_clean_archi/features/news/presentations/bloc/news/news_bloc.dart';
 
-class ListNewsPages extends StatefulWidget {
-  const ListNewsPages({super.key});
+class ListNewsWidget extends StatefulWidget {
+  const ListNewsWidget({super.key});
 
   @override
-  State<ListNewsPages> createState() => _ListNewsPagesState();
+  State<ListNewsWidget> createState() => _ListNewsWidgetState();
 }
 
-class _ListNewsPagesState extends State<ListNewsPages> {
+class _ListNewsWidgetState extends State<ListNewsWidget> {
   @override
   void initState() {
     // TODO: implement initState
@@ -28,7 +30,6 @@ class _ListNewsPagesState extends State<ListNewsPages> {
           if (state is NewsLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is NewsLoaded) {
-            AppLogger.debug(state.articles.length);
             final List<Article> articlesWithImage = state.articles
                 .where((article) => article.urlToImage != null)
                 .toList();
@@ -47,33 +48,139 @@ class _ListNewsPagesState extends State<ListNewsPages> {
                   ),
                   itemBuilder: (context, index) {
                     final article = articlesWithImage[index];
-                    return Card(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: 200,
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: article.urlToImage!,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.broken_image),
+
+                    return GestureDetector(
+                      onTap: () {
+                        context.push('/detail-news', extra: article);
+                      },
+                      child: Container(
+                        width: 400,
+                        height: 600,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              width: 400,
+                              child: ClipRRect(
+                                borderRadius: BorderRadiusGeometry.only(
+                                  topRight: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                ),
+                                child: Hero(
+                                  tag: article.title!,
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl: article.urlToImage!,
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.broken_image),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          Text(
-                            article.title!,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                            Container(
+                              padding: EdgeInsets.only(left: 9, right: 9),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    article.title != null
+                                        ? (article.title!.length > 60
+                                              ? '${article.title!.substring(0, min(60, article.title!.length))}...'
+                                              : article.title!)
+                                        : 'No Title',
+
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Row(
+                                      spacing: 5,
+                                      children: [
+                                        Text(
+                                          article.author != null &&
+                                                  article.author!.contains(',')
+                                              ? 'By ${article.author!.split(', ')[0]}'
+                                              : article.author != null
+                                              ? 'By ${article.author}'
+                                              : 'By someone',
+
+                                          style: TextStyle(fontSize: 11),
+                                          softWrap: true,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                        Icon(
+                                          Icons.verified_outlined,
+                                          size: 12,
+                                          color: Colors.blueAccent,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: article.description!.substring(
+                                        0,
+                                        min(article.description!.length, 100),
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.grey,
+                                      ),
+                                      children: <TextSpan>[
+                                        const TextSpan(
+                                          text: 'Read more.',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blueAccent,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 9,
+                                right: 9,
+                                bottom: 10,
+                              ),
+                              child: Row(
+                                spacing: 8,
+                                children: [
+                                  Icon(
+                                    Icons.favorite,
+                                    size: 20,
+                                    color: Colors.blueAccent,
+                                  ),
+                                  Icon(
+                                    Icons.comment,
+                                    size: 20,
+                                    color: Colors.blueAccent,
+                                  ),
+                                  Icon(
+                                    Icons.share,
+                                    size: 20,
+                                    color: Colors.blueAccent,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final article = articlesWithoutImages[index];
-                    return ListTile(title: Text(article.title ?? '-'));
-                  }, childCount: articlesWithoutImages.length),
                 ),
               ],
             );
